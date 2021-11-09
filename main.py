@@ -22,9 +22,6 @@ def get_lines():
     return objects
 
 
-print(get_lines()[0]['date'])
-
-
 # dates have to be hh:mm
 def get_users_logged_between_dates(date_from, date_to):
     date_from_reg = re.match(regex_time_2, date_from).groupdict()
@@ -67,19 +64,18 @@ def get_reports_between_dates(date_from, date_to):
         time = line['time']
         hour = int(time['hour'])
         minute = int(time['minute'])
-        print(line['action'])
-        if line['action'].find('Aerea exportac') != -1:
-            print(re.split(r'\s', line['action']))
-            if hour_from <= hour <= hour_to:
-                if hour_from == hour_to:
-                    if minute_from <= minute <= minute_to:
-                        reports.append(line['name'])
-                elif hour_from == hour:
-                    if minute >= minute_from:
-                        reports.append(line['name'])
-                elif hour_to == hour:
-                    if minute <= minute_from:
-                        reports.append(line['name'])
+        if 'Report' in line['name']:
+            if not not line['action'].strip():
+                if hour_from <= hour <= hour_to:
+                    if hour_from == hour_to:
+                        if minute_from <= minute <= minute_to:
+                            reports.append(line['name'])
+                    elif hour_from == hour:
+                        if minute >= minute_from:
+                            reports.append(line['name'])
+                    elif hour_to == hour:
+                        if minute <= minute_from:
+                            reports.append(line['name'])
     return reports
 
 
@@ -138,6 +134,6 @@ def get_action_for_user_between_dates(date_from, date_to, user):
 
 
 print(get_users_logged_between_dates('08:00', '08:35'))
-print(get_reports_between_dates('08:00', '08:35'))
+print(get_reports_between_dates('08:00', '10:35'))
 print(get_failed_logged_between_dates('08:00', '09:35'))
 print(get_action_for_user_between_dates('08:00', '09:35', 'Juan Alberto Casimiro'))
